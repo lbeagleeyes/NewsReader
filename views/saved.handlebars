@@ -1,0 +1,18 @@
+{{> heading/navbar}}
+
+{{> heading/title}}
+
+{{#each articles ~}}
+  <div class="card">
+  <div class="card-header">
+    <a href={{link}}>
+    {{title}}
+    </a>
+  </div>
+  <div class="card-body">
+    <p class="card-text">Description placeholder</p>
+    <a href="/delete/{{_id}}" class="btn btn-primary">Delete From Saved</a>
+  </div>
+</div>
+{{~/each}}
+

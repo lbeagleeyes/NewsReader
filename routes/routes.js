@@ -20,7 +20,6 @@ module.exports = function (app) {
   });
 
   app.get("/scrape", function (req, res) {
-
     // First, we grab the body of the html with axios
     axios.get("http://www.echojs.com/").then(function (response) {
       var articles = [];
@@ -66,7 +65,11 @@ module.exports = function (app) {
     db.Article.find({})
       .then(function (articles) {
         // If all Articles are successfully found, send them back to the client
-        res.json(articles);
+        var hbsObject = {
+          articles: articles
+        };
+        console.log(hbsObject);
+        res.render("saved", hbsObject);
       })
       .catch(function (err) {
         // If an error occurs, send the error back to the client
@@ -87,6 +90,25 @@ module.exports = function (app) {
         // If an error occurs, send the error back to the client
         res.json(err);
       });
+  });
+
+  app.get("/delete/:id", function (req, res) {
+  console.log("delete called");
+    db.Article.deleteOne({ _id: req.params.id }).then(function(){
+      db.Article.find({})
+      .then(function (articles) {
+        // If all Articles are successfully found, send them back to the client
+        var hbsObject = {
+          articles: articles
+        };
+        console.log(hbsObject);
+        res.render("saved", hbsObject);
+      })
+      .catch(function (err) {
+        // If an error occurs, send the error back to the client
+        res.render("404");
+      });
+    });
   });
 
   // Route for saving/updating an Article's associated Note
