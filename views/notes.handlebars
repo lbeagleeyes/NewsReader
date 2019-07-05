@@ -7,6 +7,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <link rel="stylesheet" href="/styles/notes.css">
   <title>Notes</title>
 </head>
 
@@ -21,22 +22,22 @@
         <h2> {{title}} </a>
       </div>
       <div class="card-body">
-        <p class="card-text">{{text}}</p>
-        {{!-- <a href="/deleteNote/{{_id}}/{{article._id}}" class="btn btn-primary">Delete Note</a> --}}
-        <div onclick=deleteNote("{{_id}}") class="btn btn-primary">Delete Note</div>
+        <div class="card-text">{{text}}</div>
+        <div onclick=deleteNote("{{_id}}") class="btn btn-danger deleteBtn">X</div>
       </div>
-      {{~/each}}
-
-      <div class="input-group input-group-lg">
-  <div class="input-group-prepend">
-    <span class="input-group-text" id="inputGroup-sizing-lg">Note</span>
-  </div>
-  <input id="newNote" data-articleId="{{article._id}}" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
-</div>
-      <div class="btn btn-success" onclick="addNote()">Add Note</div>
     </div>
+    {{~/each}}
 
-
+    <div class="input-group input-group-lg">
+      <div class="input-group-prepend">
+        <span class="input-group-text" id="inputGroup-sizing-lg">Note</span>
+      </div>
+      <input id="newNote" data-articleId="{{article._id}}" type="text" class="form-control"
+        aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+      <div class="input-group-append">
+        <div class="btn btn-success" onclick="addNote()">Add </div>
+      </div>
+    </div>
   </div>
 
   <script src="/js/note.js"></script>

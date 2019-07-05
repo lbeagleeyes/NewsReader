@@ -1,0 +1,11 @@
+.deleteBtn{
+  float: right;
+}
+
+.card-text{
+  display: inline;
+}
+
+.card{
+  margin: 1%;
+}
