@@ -13,3 +13,17 @@ function addNote() {
     location.reload();
   });
 }
+
+function deleteNote(id){
+  var articleId = $("#article").data(articleId);
+console.log("Id: " + id + " Article Id: " + articleId.articleid);
+
+  $.ajax({
+    method: "DELETE",
+    url: `/deleteNote/${id}/${articleId.articleid}`,
+  }).then(function () {
+    console.log("Note deleted");
+    location.reload();
+  });
+
+}

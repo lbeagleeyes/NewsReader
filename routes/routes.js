@@ -111,22 +111,15 @@ module.exports = function (app) {
     });
   });
 
-  // app.get("/deleteNote/:id:articleId", function (req, res) {
-  //   db.Article.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.articleId) }, { $unset: { notes: mongojs.ObjectId(req.params.id) } })
-  //     .then(function (dbArticle) {
-  //       db.Note.deleteOne({ _id: mongojs.ObjectId(req.params.id) }).then(function () {
-  //         console.log("Article sent back:" + dbArticle);
-  //         var hbsObject = {
-  //           article: dbArticle
-  //         };
-  //         res.redirect("notes", hbsObject);
-  //       })
-  //         .catch(function (err) {
-  //           // If an error occurs, send it back to the client
-  //           res.json(err);
-  //         });
-  //     });
-  // });
+  app.delete("/deleteNote/:id/:articleId", function (req, res) {
+    db.Note.deleteOne({ _id: mongojs.ObjectId(req.params.id) }).then(function () {
+      res.send("Note Deleted");
+    })
+      .catch(function (err) {
+
+        res.json(err);
+      });
+  });
 
   // Route for saving/updating an Article's associated Note
   app.post("/addNote/:id", function (req, res) {
