@@ -3,7 +3,7 @@
 // It works on the client and on the server
 var axios = require("axios");
 var cheerio = require("cheerio");
-//var mongojs = require("mongojs");
+var mongojs = require("mongojs");
 
 // Require all models
 var db = require("../models");
@@ -64,27 +64,28 @@ module.exports = function (app) {
     // TODO: Finish the route so it grabs all of the articles
     db.Article.find({})
       .then(function (articles) {
-        // If all Articles are successfully found, send them back to the client
         var hbsObject = {
           articles: articles
         };
-        console.log(hbsObject);
+        //console.log(hbsObject);
         res.render("saved", hbsObject);
       })
       .catch(function (err) {
-        // If an error occurs, send the error back to the client
         res.json(err);
       });
   });
 
   // Route for grabbing a specific Article by id, populate it with it's note
-  app.get("/articles/:id", function (req, res) {
+  app.get("/articleNotes/:id", function (req, res) {
 
     db.Article.findOne({ _id: req.params.id })
-      .populate("note")
+      .populate("notes")
       .then(function (article) {
-        // If all Articles are successfully found, send them back to the client
-        res.json(article);
+        console.log("Article sent back to notes: " + article);
+        var hbsObject = {
+          article: article
+        };
+        res.render("notes", hbsObject);
       })
       .catch(function (err) {
         // If an error occurs, send the error back to the client
@@ -93,44 +94,62 @@ module.exports = function (app) {
   });
 
   app.get("/delete/:id", function (req, res) {
-  console.log("delete called");
-    db.Article.deleteOne({ _id: req.params.id }).then(function(){
+    db.Article.deleteOne({ _id: req.params.id }).then(function () {
       db.Article.find({})
-      .then(function (articles) {
-        // If all Articles are successfully found, send them back to the client
-        var hbsObject = {
-          articles: articles
-        };
-        console.log(hbsObject);
-        res.render("saved", hbsObject);
-      })
-      .catch(function (err) {
-        // If an error occurs, send the error back to the client
-        res.render("404");
-      });
+        .then(function (articles) {
+          // If all Articles are successfully found, send them back to the client
+          var hbsObject = {
+            articles: articles
+          };
+          console.log(hbsObject);
+          res.render("saved", hbsObject);
+        })
+        .catch(function (err) {
+          // If an error occurs, send the error back to the client
+          res.render("404");
+        });
     });
   });
 
-  // Route for saving/updating an Article's associated Note
-  // router.post("/articles/:id", function (req, res) {
-  //   console.log(req.params.id);
-
-  //   db.Note.create(req.body)
-  //     .then(function (dbNote) {
-  //       // If a Note was created successfully, find one User (there's only one) and push the new Note's _id to the User's `notes` array
-  //       // { new: true } tells the query that we want it to return the updated User -- it returns the original by default
-  //       // Since our mongoose query returns a promise, we can chain another `.then` which receives the result of the query
-  //       return db.Article.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.id) }, { $push: { note: dbNote._id } }, { new: true });
-  //     })
+  // app.get("/deleteNote/:id:articleId", function (req, res) {
+  //   db.Article.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.articleId) }, { $unset: { notes: mongojs.ObjectId(req.params.id) } })
   //     .then(function (dbArticle) {
-  //       // If the article was updated successfully, send it back to the client
-  //       res.json(dbArticle);
-  //     })
-  //     .catch(function (err) {
-  //       // If an error occurs, send it back to the client
-  //       res.json(err);
+  //       db.Note.deleteOne({ _id: mongojs.ObjectId(req.params.id) }).then(function () {
+  //         console.log("Article sent back:" + dbArticle);
+  //         var hbsObject = {
+  //           article: dbArticle
+  //         };
+  //         res.redirect("notes", hbsObject);
+  //       })
+  //         .catch(function (err) {
+  //           // If an error occurs, send it back to the client
+  //           res.json(err);
+  //         });
   //     });
   // });
+
+  // Route for saving/updating an Article's associated Note
+  app.post("/addNote/:id", function (req, res) {
+
+    console.log(req.params.id);
+    console.log("Note body: " + JSON.stringify(req.body));
+
+    db.Note.create(req.body)
+      .then(function (dbNote) {
+        return db.Article.findOneAndUpdate({ _id: mongojs.ObjectId(req.params.id) }, { $push: { notes: dbNote._id } }, { new: true })
+          .then(function (dbArticle) {
+            console.log("Article sent back:" + dbArticle);
+            var hbsObject = {
+              article: dbArticle
+            };
+            res.render("notes", hbsObject);
+          })
+          .catch(function (err) {
+            // If an error occurs, send it back to the client
+            res.json(err);
+          });
+      });
+  });
 }
 
 

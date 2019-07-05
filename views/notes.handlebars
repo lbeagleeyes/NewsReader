@@ -1,0 +1,44 @@
+{{!-- do modal window here for notes crud --}}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Notes</title>
+</head>
+
+<body>
+  <h1>Notes </h1>
+  <h2>{{article.title}}</h2>
+  <hr>
+  <div class="notes container">
+    {{#each article.notes ~}}
+    <div class="card">
+      <div class="card-header">
+        <h2> {{title}} </a>
+      </div>
+      <div class="card-body">
+        <p class="card-text">{{text}}</p>
+        <a href="/deleteNote/{{_id}}/{{article._id}}" class="btn btn-primary">Delete Note</a>
+      </div>
+      {{~/each}}
+
+      <div class="input-group input-group-lg">
+  <div class="input-group-prepend">
+    <span class="input-group-text" id="inputGroup-sizing-lg">Note</span>
+  </div>
+  <input id="newNote" data-articleId="{{article._id}}" type="text" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-lg">
+</div>
+      <div class="btn btn-success" onclick="addNote()">Add Note</div>
+    </div>
+
+
+  </div>
+
+  <script src="/js/note.js"></script>
+</body>
+
+</html>
