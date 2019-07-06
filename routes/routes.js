@@ -21,7 +21,7 @@ module.exports = function (app) {
 
   app.get("/scrape", function (req, res) {
     // First, we grab the body of the html with axios
-    axios.get("http://www.echojs.com/").then(function (response) {
+    axios.get("https://www.dogonews.com/").then(function (response) {
       var articles = [];
       // Then, we load that into cheerio and save it to $ for a shorthand selector
       var $ = cheerio.load(response.data);
@@ -34,16 +34,26 @@ module.exports = function (app) {
         // Add the text and href of every link, and save them as properties of the result object
         result.title = $(this)
           .children("a")
+          .children("span")
           .text();
         result.link = $(this)
+
           .children("a")
           .attr("href");
+
+        result.description = $(this)
+          .parent()
+          .children("p")
+          .text();
 
         articles.push(result);
       });
 
-      // Send a message to the client
-      res.send(articles);
+      var hbsObject = {
+        articles: articles
+      };
+      //console.log(hbsObject);
+      res.render("scraped", hbsObject);
     });
   });
 

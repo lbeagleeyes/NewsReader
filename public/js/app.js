@@ -1,6 +1,7 @@
 // Grab the articles as a json
 
 function scrapeArticles() {
+  clearArticles();
   console.log("Scrape articles called");
   $.ajax({
     method: "GET",
@@ -11,6 +12,18 @@ function scrapeArticles() {
       $("#articles").append(createCard(article));
     });
   });
+}
+
+function home(){
+  $("#scrapeBtn").show();
+  $("#clearBtn").show();
+  return true;
+}
+
+function savedArticles(){
+  $("#scrapeBtn").hide();
+  $("#clearBtn").hide();
+  return true;
 }
 
 function createCard(article) {
@@ -31,7 +44,7 @@ function createCard(article) {
   var cardbody = $('<div>').addClass('card-body');
   var cardtext = $('<p>', {
     class: 'card-text',
-    text: 'article description placeholder'
+    text: article.description
   });
 
   var cardBtn = $('<div>', {
@@ -58,8 +71,25 @@ function createCard(article) {
 
 function clearArticles(){
   $("#articles").empty();
+  return true;
 }
 
+function saveArticle(id){
+  var element = $("#" + id);
+  var article = {
+    title: element.data("title"),
+    link: element.data("link"),
+    description: element.data("description") 
+  }
+  $.ajax({
+    type: "POST",
+    url: "/article",
+    data: article,
+    success: function () {
+      console.log("article saved to database");
+    }
+  });
+}
 //gets articles from database
 // $.getJSON("/articles", function (data) {
 //   console.log(data);

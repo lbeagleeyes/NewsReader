@@ -11,9 +11,7 @@
   </div>
   <div class="card-body">
     <p class="card-text">{{description}}</p>
-    <a href="/delete/{{_id}}" class="btn btn-primary">Delete From Saved</a>
-    <a href="/articleNotes/{{_id}}" class="btn btn-success">Article Notes</a>
+    <button id="saveArticle-{{@index}}" data-title="{{title}}" data-link="{{link}}" data-description="{{description}}" onclick=saveArticle("saveArticle-{{@index}}") class="btn btn-primary">Save</button>
   </div>
 </div>
 {{~/each}}
-
