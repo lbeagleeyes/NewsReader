@@ -5,13 +5,9 @@ var axios = require("axios");
 var cheerio = require("cheerio");
 var mongojs = require("mongojs");
 
-// Require all models
 var db = require("../models");
-// Routes
 
-// A GET route for scraping the echoJS website
 module.exports = function (app) {
-
 
   app.get("/", function (req, res) {
     res.render("index", {
@@ -37,15 +33,12 @@ module.exports = function (app) {
           .children("span")
           .text();
         result.link = $(this)
-
           .children("a")
           .attr("href");
-
         result.description = $(this)
           .parent()
           .children("p")
           .text();
-
         articles.push(result);
       });
 
@@ -71,7 +64,6 @@ module.exports = function (app) {
 
   // Route for getting all Articles from the db
   app.get("/articles", function (req, res) {
-    // TODO: Finish the route so it grabs all of the articles
     db.Article.find({})
       .then(function (articles) {
         var hbsObject = {
